@@ -1,0 +1,180 @@
+* { margin:0; padding:0; box-sizing:border-box; user-select:none; }
+
+body {
+  font-family:'Nunito', sans-serif; font-weight:700;
+  color:#f4efe6; background:#132a1e; overflow:hidden; height:100vh;
+}
+
+/* Balatro-style slow swirl background */
+#bg { position:fixed; inset:-60%; z-index:0; filter:blur(90px); opacity:.55;
+  background:conic-gradient(from 0deg, #14532d, #1e3a8a, #7f1d1d, #14532d);
+  animation:swirl 40s linear infinite; }
+@keyframes swirl { to { transform:rotate(360deg); } }
+
+#game { position:relative; z-index:1; height:100vh; display:flex; flex-direction:column; }
+#game.shake { animation:shake .4s; }
+@keyframes shake {
+  20% { transform:translate(-8px,4px) rotate(-.5deg); }
+  40% { transform:translate(7px,-5px) rotate(.5deg); }
+  60% { transform:translate(-5px,3px); }
+  80% { transform:translate(4px,-2px); }
+}
+
+/* ---------- HUD ---------- */
+#hud { display:flex; gap:12px; padding:14px 18px; align-items:stretch; }
+.hud-box { background:rgba(10,20,15,.75); border:2px solid #2e5941; border-radius:12px;
+  padding:10px 16px; min-width:150px; }
+.hud-box.small { display:flex; flex-direction:column; justify-content:space-around; font-size:15px; min-width:120px; }
+.hud-label { font-family:'Bungee'; font-size:17px; color:#ffd54a; margin-bottom:4px; }
+.hud-row { display:flex; justify-content:space-between; gap:14px; align-items:baseline; }
+.hud-sub { font-size:12px; opacity:.7; text-transform:uppercase; letter-spacing:1px; }
+.big { font-family:'Bungee'; font-size:22px; }
+.red { color:#ff5c5c; } .gold { color:#ffd54a; } .blue { color:#5cb8ff; }
+
+#jokers { flex:1; }
+#joker-row { display:flex; gap:8px; margin-top:4px; }
+.joker { width:52px; height:64px; background:linear-gradient(160deg,#3b2f63,#22183f);
+  border:2px solid #8b7ad1; border-radius:10px; display:flex; align-items:center;
+  justify-content:center; font-size:26px; cursor:help; position:relative;
+  transition:transform .15s; }
+.joker:hover { transform:translateY(-6px) rotate(-3deg) scale(1.15); z-index:5; }
+.joker.pulse { animation:jpulse .45s; }
+@keyframes jpulse { 40% { transform:scale(1.35) rotate(6deg); box-shadow:0 0 24px #ffd54a; } }
+.joker .tip { display:none; position:absolute; top:70px; left:50%; transform:translateX(-50%);
+  background:#0a140f; border:1px solid #8b7ad1; border-radius:8px; padding:8px 10px;
+  width:170px; font-size:12px; z-index:10; text-align:center; }
+.joker:hover .tip { display:block; }
+
+/* ---------- screens ---------- */
+main { flex:1; display:flex; flex-direction:column; justify-content:center; }
+.screen { display:flex; flex-direction:column; align-items:center; gap:18px; }
+.hidden { display:none !important; }
+
+.blind-card { background:rgba(10,20,15,.85); border:3px solid #ffd54a; border-radius:20px;
+  padding:36px 60px; text-align:center; display:flex; flex-direction:column; gap:14px;
+  animation:dropIn .45s cubic-bezier(.2,1.6,.4,1); max-width:640px; }
+@keyframes dropIn { from { transform:translateY(-80px) scale(.8); opacity:0; } }
+.blind-icon { font-size:56px; }
+h1 { font-family:'Bungee'; color:#ffd54a; font-size:30px; }
+.twist { color:#ff5c5c; font-size:17px; }
+
+.btn { font-family:'Bungee'; font-size:17px; color:#fff; border:none; border-radius:12px;
+  padding:13px 30px; cursor:pointer; transition:transform .12s;
+  box-shadow:0 5px 0 rgba(0,0,0,.45); }
+.btn:hover:not(:disabled) { transform:translateY(-3px); }
+.btn:active:not(:disabled) { transform:translateY(2px); box-shadow:0 1px 0 rgba(0,0,0,.45); }
+.btn:disabled { opacity:.4; cursor:default; }
+.btn.primary { background:#2563eb; } .btn.danger { background:#dc2626; }
+.btn.buy { background:#16a34a; font-size:14px; padding:9px 18px; }
+
+/* ---------- hand & cards ---------- */
+.combo-preview { font-family:'Bungee'; font-size:20px; color:#ffd54a; height:30px; text-align:center; }
+#hand { display:flex; justify-content:center; gap:14px; padding:10px; min-height:260px;
+  perspective:900px; }
+.cardwrap { transition:transform .18s; cursor:pointer; }
+.cardwrap.sel { transform:translateY(-26px); }
+.card { width:160px; height:225px; border-radius:14px; position:relative;
+  background:linear-gradient(160deg,#fdf6e3,#e8dcc0); color:#1d2b22;
+  border:3px solid #c9b98a; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:6px; padding:8px; text-align:center;
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:transform .1s, box-shadow .2s;
+  animation:deal .4s cubic-bezier(.2,1.4,.4,1) backwards;
+  box-shadow:0 6px 14px rgba(0,0,0,.4); }
+@keyframes deal { from { transform:translateY(140px) rotate(8deg); opacity:0; } }
+.cardwrap.sel .card { box-shadow:0 0 18px #ffd54a; border-color:#ffd54a; }
+.card .icon { font-size:42px; }
+.card .card-img { width:138px; height:96px; object-fit:cover; border-radius:9px;
+  border:1px solid #c9b98a; pointer-events:none; }
+.card.cursed .card-img { filter:grayscale(1) brightness(.7); }
+.card .fr { font-family:'Bungee'; font-size:16px; line-height:1.15; overflow-wrap:anywhere; }
+.card .chips { font-size:15px; color:#2563eb; font-weight:900; }
+.card .tier { position:absolute; top:6px; right:6px; width:14px; height:14px; border-radius:50%; }
+.tier.bronze { background:#b0713a; } .tier.silver { background:#c9ced4; } .tier.gold { background:#ffd54a; box-shadow:0 0 8px #ffd54a; }
+.card.cursed { background:linear-gradient(160deg,#3b2350,#241535); color:#e3c8ff;
+  border-color:#a855f7; box-shadow:0 0 14px #a855f7aa; }
+.card.cursed .chips { color:#c084fc; }
+.card .new-tag { position:absolute; top:6px; left:6px; font-size:9px; font-weight:900;
+  background:#2563eb; color:#fff; border-radius:6px; padding:2px 5px; }
+
+.teach-es { grid-column:1/-1; font-size:26px; font-weight:900; margin-bottom:6px; }
+.quiz-ex { grid-column:1/-1; margin-top:14px; font-size:17px; font-style:italic;
+  color:#1d2b22; line-height:1.5; max-width:440px; }
+.quiz-ex span { font-style:normal; font-size:14px; opacity:.65; }
+.quiz-ex b { color:#dc2626; }
+.teach-img { grid-column:1/-1; max-width:400px; width:100%; max-height:250px; object-fit:cover;
+  border-radius:10px; margin:0 auto 8px; border:2px solid #1d2b22; }
+.teach-img.small { display:block; max-width:280px; max-height:175px; margin:0 auto 8px; }
+.teach-ok { grid-column:1/-1; background:#16a34a !important; color:#fff !important;
+  border-color:#16a34a !important; }
+.card.scoring { animation:pop .45s; }
+@keyframes pop { 40% { transform:translateY(-18px) scale(1.18); box-shadow:0 0 30px #ffd54a; } }
+.card.failed { animation:fail .45s; }
+@keyframes fail { 25% { transform:translateX(-9px); } 50% { transform:translateX(9px); } 75% { transform:translateX(-5px); } }
+
+#table-controls { display:flex; gap:16px; justify-content:center; padding-bottom:26px; }
+
+/* ---------- quiz ---------- */
+.overlay { position:fixed; inset:0; background:rgba(5,12,8,.8); z-index:20;
+  display:flex; align-items:center; justify-content:center; }
+.quiz-box { background:linear-gradient(160deg,#fdf6e3,#e8dcc0); color:#1d2b22;
+  border:4px solid #ffd54a; border-radius:20px; padding:34px 48px; text-align:center;
+  min-width:420px; animation:flipIn .35s cubic-bezier(.2,1.4,.4,1); }
+@keyframes flipIn { from { transform:rotateY(80deg) scale(.7); opacity:0; } }
+#quiz-word { font-family:'Bungee'; font-size:42px; margin:14px 0 8px; }
+#quiz-speak { font-size:24px; background:none; border:none; cursor:pointer;
+  margin-bottom:18px; transition:transform .12s; }
+#quiz-speak:hover { transform:scale(1.3); }
+#quiz-options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.opt { font-family:'Nunito'; font-weight:900; font-size:18px; padding:14px; border-radius:10px;
+  border:2px solid #1d2b22; background:#fff; cursor:pointer; transition:transform .1s; }
+.opt:hover { transform:scale(1.04); }
+.opt.right { background:#16a34a; color:#fff; border-color:#16a34a; animation:pop .4s; }
+.opt.wrong { background:#dc2626; color:#fff; border-color:#dc2626; animation:fail .4s; }
+
+/* ---------- banner & fx ---------- */
+#banner { position:fixed; top:34%; left:50%; transform:translateX(-50%); z-index:30;
+  font-family:'Bungee'; font-size:44px; color:#ffd54a; pointer-events:none;
+  text-shadow:0 0 24px #000, 0 4px 0 #7a5c00; animation:bannerIn .8s; white-space:nowrap; }
+@keyframes bannerIn { 0% { transform:translateX(-50%) scale(.3); opacity:0; }
+  30% { transform:translateX(-50%) scale(1.25); opacity:1; }
+  80% { transform:translateX(-50%) scale(1); opacity:1; } 100% { opacity:0; } }
+#banner.mult { color:#ff5c5c; }
+
+#fx { position:fixed; inset:0; pointer-events:none; z-index:40; }
+.float { position:absolute; font-family:'Bungee'; font-size:22px; color:#5cb8ff;
+  animation:floatUp 1s forwards; text-shadow:0 2px 6px #000; }
+.float.gold { color:#ffd54a; } .float.red { color:#ff5c5c; } .float.green { color:#4ade80; }
+@keyframes floatUp { to { transform:translateY(-70px); opacity:0; } }
+
+/* ---------- shop ---------- */
+.shop-title { font-size:26px; }
+#shop-items { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; max-width:900px; }
+.shop-item { background:rgba(10,20,15,.85); border:2px solid #8b7ad1; border-radius:14px;
+  padding:18px; width:200px; text-align:center; display:flex; flex-direction:column; gap:8px;
+  animation:dropIn .4s backwards; }
+.shop-item .icon { font-size:38px; }
+.shop-item .name { font-family:'Bungee'; font-size:15px; color:#ffd54a; }
+.shop-item .desc { font-size:13px; opacity:.85; min-height:36px; }
+.shop-item.sold { opacity:.35; }
+
+#over-stats { font-size:17px; line-height:1.7; }
+#over-words { font-size:14px; max-width:480px; color:#e3c8ff; line-height:1.6; }
+
+/* ---------- mobile ---------- */
+@media (max-width:700px) {
+  body { overflow:auto; }
+  #game { height:auto; min-height:100vh; }
+  #hud { flex-wrap:wrap; gap:8px; padding:10px; }
+  .hud-box { min-width:0; flex:1 1 40%; padding:8px 10px; }
+  #jokers { flex-basis:100%; }
+  #hand { flex-wrap:wrap; min-height:0; gap:10px; }
+  .card { width:150px; height:210px; }
+  .quiz-box { min-width:0; width:92vw; padding:22px 14px; }
+  #quiz-word { font-size:28px; }
+  #quiz-options { grid-template-columns:1fr; }
+  .opt { padding:12px; font-size:16px; }
+  .blind-card { padding:24px 18px; max-width:92vw; }
+  #banner { font-size:28px; }
+  .teach-img.small { max-width:220px; }
+}

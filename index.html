@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parole — apprends le français</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="bg"></div>
+<div id="game">
+
+  <header id="hud">
+    <div class="hud-box" id="hud-blind">
+      <div class="hud-label" id="blind-name">Petite Mise</div>
+      <div class="hud-row"><span class="hud-sub">Objectif</span><span class="big red" id="hud-target">0</span></div>
+      <div class="hud-row"><span class="hud-sub">Score</span><span class="big gold" id="hud-scored">0</span></div>
+    </div>
+    <div class="hud-box small">
+      <div>Mains <span class="big blue" id="hud-hands">4</span></div>
+    </div>
+    <div class="hud-box small">
+      <div>€ <span class="big gold" id="hud-money">4</span></div>
+      <div>Ante <span class="big" id="hud-ante">1</span></div>
+      <div>Pioche <span class="big" id="hud-deck">0</span></div>
+    </div>
+    <div class="hud-box" id="jokers"><div class="hud-sub">Pouvoirs</div><div id="joker-row"></div></div>
+  </header>
+
+  <main>
+    <section id="screen-intro" class="screen">
+      <div class="blind-card">
+        <div class="blind-icon" id="intro-icon">🪙</div>
+        <h1 id="intro-name">Petite Mise</h1>
+        <p id="intro-twist" class="twist hidden"></p>
+        <p>Objectif : <span class="big red" id="intro-target">150</span> points</p>
+        <p class="hud-sub">Récompense : €€€</p>
+        <button class="btn primary" id="btn-start">Jouer</button>
+      </div>
+    </section>
+
+    <section id="screen-table" class="screen hidden">
+      <div id="combo-preview" class="combo-preview">&nbsp;</div>
+      <div id="hand"></div>
+      <div id="table-controls">
+        <button class="btn primary" id="btn-play" disabled>Jouer la main</button>
+      </div>
+    </section>
+
+    <section id="screen-shop" class="screen hidden">
+      <h1 class="shop-title">🛒 Le Marché</h1>
+      <div id="shop-items"></div>
+      <button class="btn primary" id="btn-shop-continue">Continuer →</button>
+    </section>
+
+    <section id="screen-over" class="screen hidden">
+      <div class="blind-card">
+        <h1 id="over-title">Partie terminée</h1>
+        <div id="over-stats"></div>
+        <div id="over-words"></div>
+        <button class="btn primary" id="btn-newrun">Nouvelle partie</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="quiz" class="overlay hidden">
+    <div class="quiz-box">
+      <div class="hud-sub" id="quiz-hint">¿Qué significa…?</div>
+      <div id="quiz-word">?</div>
+      <button id="quiz-speak" title="Écouter">🔊</button>
+      <div id="quiz-options"></div>
+      <div id="quiz-ex" class="quiz-ex hidden"></div>
+    </div>
+  </div>
+
+  <div id="banner" class="hidden"></div>
+  <div id="fx"></div>
+</div>
+<script src="images.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
