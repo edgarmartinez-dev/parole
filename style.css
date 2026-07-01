@@ -102,6 +102,9 @@ h1 { font-family:'Bungee'; color:#ffd54a; font-size:30px; }
   color:#1d2b22; line-height:1.5; max-width:440px; }
 .quiz-ex span { font-style:normal; font-size:14px; opacity:.65; }
 .quiz-ex b { color:#dc2626; }
+.quiz-next { margin-top:14px; font-size:13px; text-transform:uppercase; letter-spacing:1px;
+  opacity:.55; animation:nudge 1.2s ease-in-out infinite; cursor:pointer; }
+@keyframes nudge { 50% { opacity:.95; } }
 .teach-img { grid-column:1/-1; max-width:400px; width:100%; max-height:250px; object-fit:cover;
   border-radius:10px; margin:0 auto 8px; border:2px solid #1d2b22; }
 .teach-img.small { display:block; max-width:280px; max-height:175px; margin:0 auto 8px; }

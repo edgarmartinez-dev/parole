@@ -667,7 +667,11 @@ if (typeof window !== 'undefined') {
             ? `<img class="teach-img small" src="${IMAGES[card.fr]}" alt="">` : '';
           $('quiz-ex').innerHTML = `${img}« ${boldEx(exFr, card.fr)} »<br><span>${exEs}</span>`;
           $('quiz-ex').classList.remove('hidden');
-          await sleep(ok ? 1300 : 2600); // linger on mistakes so the answer sinks in
+          // reader-paced: stays up until tapped (brief guard so the answer click can't skip it)
+          await sleep(400);
+          $('quiz-next').classList.remove('hidden');
+          await new Promise(res => $('quiz').addEventListener('click', res, { once:true }));
+          $('quiz-next').classList.add('hidden');
           $('quiz').classList.add('hidden');
           resolve(ok);
         };
