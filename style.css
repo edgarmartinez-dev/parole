@@ -142,6 +142,11 @@ h1 { font-family:'Bungee'; color:#ffd54a; font-size:30px; }
 #banner.mult { color:#ff5c5c; }
 
 #fx { position:fixed; inset:0; pointer-events:none; z-index:40; }
+.spark { position:absolute; width:9px; height:9px; border-radius:2px; pointer-events:none;
+  animation:spark .7s cubic-bezier(.2,.8,.4,1) forwards; }
+@keyframes spark { to { transform:translate(var(--dx), var(--dy)) rotate(540deg) scale(0); opacity:0; } }
+.quiz-box.correct { animation:glow-green .55s; }
+@keyframes glow-green { 30% { box-shadow:0 0 70px #4ade80; border-color:#4ade80; transform:scale(1.03); } }
 .float { position:absolute; font-family:'Bungee'; font-size:22px; color:#5cb8ff;
   animation:floatUp 1s forwards; text-shadow:0 2px 6px #000; }
 .float.gold { color:#ffd54a; } .float.red { color:#ff5c5c; } .float.green { color:#4ade80; }

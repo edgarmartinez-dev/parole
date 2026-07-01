@@ -436,6 +436,19 @@ if (typeof window !== 'undefined') {
     const r = el.getBoundingClientRect();
     float(r.left + r.width / 2 - 20, r.top - 10, text, cls);
   }
+  function burst(x, y) {
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'spark';
+      const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 100;
+      p.style.left = x + 'px'; p.style.top = y + 'px';
+      p.style.setProperty('--dx', Math.cos(a) * d + 'px');
+      p.style.setProperty('--dy', Math.sin(a) * d - 40 + 'px');
+      p.style.background = ['#ffd54a', '#4ade80', '#5cb8ff', '#ff8fab'][i % 4];
+      $('fx').appendChild(p);
+      setTimeout(() => p.remove(), 750);
+    }
+  }
   function banner(text, mult = false) {
     const b = $('banner');
     b.textContent = text;
@@ -609,6 +622,8 @@ if (typeof window !== 'undefined') {
     });
   }
 
+  let quizStreak = 0; // consecutive correct answers, for escalating celebration
+
   function showQuiz(card, reversed) {
     return new Promise(resolve => {
       // same-theme distractors: forces real discrimination, not elimination by topic
@@ -629,6 +644,17 @@ if (typeof window !== 'undefined') {
           const ok = opts[i].fr === card.fr;
           btn.classList.add(ok ? 'right' : 'wrong');
           (ok ? SFX.right : SFX.wrong)();
+          if (ok) {
+            const r = btn.getBoundingClientRect();
+            burst(r.left + r.width / 2, r.top + r.height / 2);
+            const box = document.querySelector('.quiz-box');
+            box.classList.add('correct');
+            setTimeout(() => box.classList.remove('correct'), 550);
+            if (++quizStreak >= 2) {
+              floatOver($('quiz-word'), `🔥 ${quizStreak} de suite !`, 'gold');
+              if (quizStreak % 5 === 0) shake();
+            }
+          } else quizStreak = 0;
           if (reversed) speak(card.fr); // reveal pronunciation after answering
           if (!ok) {
             const rightBtn = [...$('quiz-options').children][opts.findIndex(o => o.fr === card.fr)];
